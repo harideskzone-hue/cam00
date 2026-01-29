@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -47,11 +48,32 @@
         }
     </style>
 </head>
+
 <body>
     <h1>Live Feed</h1>
     <div class="video-container">
-        <img src="/video_feed" alt="Live Camera Stream">
+        <!-- The src will be updated by JS to include the token -->
+        <img id="videoStream" src="" alt="Live Camera Stream">
     </div>
     <div class="status">Streaming via FastAPI</div>
+
+    <script>
+        // Get the token from the current page URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+
+        const imgElement = document.getElementById('videoStream');
+
+        if (token) {
+            // Append the token to the output image source
+            imgElement.src = `/video_feed?token=${token}`;
+        } else {
+            // Fallback or show error
+            imgElement.alt = "Error: Authentication token missing in URL (?token=...)";
+            document.querySelector('.status').innerText = "Access Forbidden: No Token Provided";
+            document.querySelector('.status').style.color = "#ff4444";
+        }
+    </script>
 </body>
+
 </html>
