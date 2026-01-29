@@ -12,6 +12,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.security import APIKeyQuery
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
+import numpy as np
 
 # Load params from .env file
 load_dotenv()
@@ -96,7 +97,9 @@ class VideoCamera:
             else:
                  # Fallback for Cloud/No-Camera environment
                  # Create a black placeholder image (480p)
-                 import numpy as np
+                 if self.frame is None: 
+                     logger.warning("Switching to Fallback (Cloud) Mode - No Camera Found")
+
                  dummy_frame = np.zeros((480, 640, 3), dtype=np.uint8)
                  
                  # Add text
