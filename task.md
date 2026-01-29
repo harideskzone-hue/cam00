@@ -1,0 +1,22 @@
+# Tasks
+
+- [/] Project Setup
+    - [x] Create project structure (templates directory) <!-- id: 0 -->
+    - [/] Install dependencies (fastapi, uvicorn, opencv-python, jinja2) <!-- id: 1 -->
+- [x] Backend Implementation
+    - [x] Create `main.py` with FastAPI app <!-- id: 2 -->
+    - [x] Implement threaded camera capture and robustness <!-- id: 3 -->
+    - [x] Add `/video_feed` and `/health` endpoints <!-- id: 4 -->
+    - [x] Add Security (Token) and Optimization (FPS/Quality) <!-- id: 10 -->
+    - [x] Add root route to serve template <!-- id: 5 -->
+    - [x] Handle cleanup on shutdown <!-- id: 6 -->
+- [x] Frontend Implementation
+    - [x] Create `templates/index.html` with dark theme and responsive video <!-- id: 7 -->
+- [x] Cloudflare Deployment
+    - [x] Configure backend (Security, FPS) <!-- id: 11 -->
+    - [x] Infrastructure (cloudflared config) <!-- id: 12 -->
+    - [x] Automation (deploy.sh) <!-- id: 13 -->
+- [ ] Verification
+    - [x] Run application locally <!-- id: 8 -->
+    - [x] Verify video stream <!-- id: 9 -->
+    - [ ] Verify Public Cloudflare URL <!-- id: 14 -->
