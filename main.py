@@ -78,9 +78,6 @@ class VideoCamera:
                 success, frame = self.video.read()
                 if success:
                     with self.lock:
-                        # Resize if needed (optional optimization)
-                        # frame = cv2.resize(frame, (640, 480))
-                        
                         # Encode frame to JPEG with reduced quality
                         encode_params = [int(cv2.IMWRITE_JPEG_QUALITY), JPEG_QUALITY]
                         ret, buffer = cv2.imencode('.jpg', frame, encode_params)
@@ -97,8 +94,27 @@ class VideoCamera:
                     except Exception as e:
                         logger.error(f"Reconnection failed: {e}")
             else:
-                 logger.warning("Camera not open. Retrying...")
-                 time.sleep(2)
+                 # Fallback for Cloud/No-Camera environment
+                 # Create a black placeholder image (480p)
+                 import numpy as np
+                 dummy_frame = np.zeros((480, 640, 3), dtype=np.uint8)
+                 
+                 # Add text
+                 cv2.putText(dummy_frame, "NO CAMERA DETECTED", (160, 200), 
+                             cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+                 cv2.putText(dummy_frame, f"Time: {time.ctime()}", (140, 250), 
+                             cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 1)
+                 cv2.putText(dummy_frame, "(Cloud Mode)", (250, 300), 
+                             cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 1)
+
+                 encode_params = [int(cv2.IMWRITE_JPEG_QUALITY), JPEG_QUALITY]
+                 ret, buffer = cv2.imencode('.jpg', dummy_frame, encode_params)
+                 if ret:
+                     with self.lock:
+                         self.frame = buffer.tobytes()
+                 
+                 # Retry connection periodically but keep streaming dummy frame
+                 time.sleep(1)
                  try:
                     src = int(self.source) if str(self.source).isdigit() else self.source
                     self.video = cv2.VideoCapture(src)
